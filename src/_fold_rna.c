@@ -93,7 +93,7 @@ static PyObject* fold(PyObject* self, PyObject* args) {
 static struct PyMethodDef methods[] = {
     {"hello_world", (PyCFunction)_hello_world, METH_NOARGS},
     {"version", (PyCFunction)version, METH_NOARGS},
-    {"fold", fold, METH_VARARGS, "Returns secondary structure of a nucleotide sequence"},
+    {"fold", (PyCFunction)fold, METH_VARARGS, "Returns secondary structure of a nucleotide sequence"},
     {NULL, NULL}
 };
 
