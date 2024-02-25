@@ -30,5 +30,7 @@ rna_fold.version()
 
 seq = "AGACGACAAGGUUGAAUCGCACCCACAGUCUAUGAGUCGGUG"
 rna_fold.fold(seq)
+
+rna_fold.gc_content(seq)
 ```
 

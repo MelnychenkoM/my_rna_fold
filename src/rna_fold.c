@@ -59,8 +59,29 @@ void nussinov(const char rna[], char* structure) {
             j--;
         }
     }
-
     // printf("Optimal secondary structure: %s\n", structure);
+}
+
+// Nussinov matrix
+void populate_matrix(const char rna[], int length, int matrix[length][length]) {
+    for (int i = 0; i < length; i++) {
+        for (int j = 0; j < length; j++) {
+            matrix[i][j] = 0;
+        }
+    }
+
+    for (int j = 0; j < length; j++) {
+        for (int i = 0; i < j; i++) {
+            matrix[i][j] = max(matrix[i][j], matrix[i + 1][j]);
+            if ((rna[i] == 'A' && rna[j] == 'U') || (rna[i] == 'U' && rna[j] == 'A') ||
+                (rna[i] == 'C' && rna[j] == 'G') || (rna[i] == 'G' && rna[j] == 'C')) {
+                matrix[i][j] = max(matrix[i][j], matrix[i + 1][j - 1] + 1);
+            }
+            for (int k = i + 1; k < j - 1; k++) {
+                matrix[i][j] = max(matrix[i][j], matrix[i][k] + matrix[k + 1][j]);
+            }
+        }
+    }
 }
 
 double GC_content(const char* seq){
@@ -97,6 +118,13 @@ double GC_content(const char* seq){
     }
     
     int GC_count = G_count + C_count;
-    double percentage = (double)GC_count / (GC_count + A_count + U_count + T_count);
+    int total_count = GC_count + A_count + U_count + T_count;
+
+    // Avoid division by zero
+    if (total_count == 0) {
+        return 0.0;
+    }
+
+    double percentage = (double)GC_count / total_count;
     return percentage;
 }
