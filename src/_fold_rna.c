@@ -71,7 +71,7 @@ static PyObject* version(PyObject* self){
     return PyUnicode_FromString("Test version (the algorithm is not verified)");
 }
 
-static PyObject* rna_fold(PyObject* self, PyObject* args) {
+static PyObject* fold(PyObject* self, PyObject* args) {
     const char* input_str;
 
     // Parse the input Python string into a C string
@@ -93,7 +93,7 @@ static PyObject* rna_fold(PyObject* self, PyObject* args) {
 static struct PyMethodDef methods[] = {
     {"hello_world", (PyCFunction)_hello_world, METH_NOARGS},
     {"version", (PyCFunction)version, METH_NOARGS},
-    {"fold_rna", rna_fold, METH_VARARGS, "Returns secondary structure of a nucleotide sequence"},
+    {"fold", fold, METH_VARARGS, "Returns secondary structure of a nucleotide sequence"},
     {NULL, NULL}
 };
 
