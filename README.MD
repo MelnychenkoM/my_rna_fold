@@ -1,3 +1,11 @@
+<script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
+  MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
+    data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
+  });
+});
+</script>
+
 # Nussinov algorithm for nucleic acid secondary structure prediction
 ## Algorithm description
 Worst-case performance: $O(n^3)$ \
@@ -9,7 +17,7 @@ The optimal score of the subsequence $S_{i:j}$, where $0 \leq i < j \leq n - 1$ 
 $M(i, i) = 0$, $M(i, i-1) = 0$.
 2) Start filling out our matrix from the bottom to the upper right corner, where $M(0, n-1)$ is the optimal score for the complete sequence with the length $n$.
 3) The filling rule is
-```math
+$$
 M(i, j) = \max \left\{
 \begin{array}{ll}
 M(i + 1, j-1) + 1 & \text{if paired} \\
@@ -18,7 +26,7 @@ M(i, j-1) \\
 \max_{i<k<j}S(i,k) + S(k+1, j)
 \end{array}
 \right.
-```
+$$
 
 4) Traceback the optimal path that got us into the upper corner.
 
