@@ -1,21 +1,20 @@
 #include <string.h>
 #include <stdio.h>
-// #include <Python.h>
+#include <Python.h>
 
 #define max(a,b) \
    ({ __typeof__ (a) _a = (a); \
        __typeof__ (b) _b = (b); \
      _a > _b ? _a : _b; })
 
-void nussinov(const char rna[]) {
-    printf("Input sequence: %s\n", rna);
+// Nussinov algorithm for rna folding
+void nussinov(const char rna[], char* structure) {
     int length = strlen(rna);
 
-
+    printf("Input sequence: %s\n", rna);
     printf("The length of the rna sequence: %d\n", length);
 
     int matrix[length][length];
-    char structure[length + 1];
 
     for (int i = 0; i < length; i++) {
         for (int j = 0; j < length; j++) {
@@ -61,10 +60,9 @@ void nussinov(const char rna[]) {
         }
     }
 
-    printf("Optimal secondary structure: %s\n", structure);
-    // return structure;
+    // printf("Optimal secondary structure: %s\n", structure);
 }
-/*
+
 static PyObject* _hello_world(PyObject* self){
     return PyUnicode_FromString("Hello World!");
 }
@@ -73,7 +71,7 @@ static PyObject* version(PyObject* self){
     return PyUnicode_FromString("Test version (the algorithm is not verified)");
 }
 
-static PyObject* process_string(PyObject* self, PyObject* args) {
+static PyObject* rna_fold(PyObject* self, PyObject* args) {
     const char* input_str;
 
     // Parse the input Python string into a C string
@@ -81,28 +79,21 @@ static PyObject* process_string(PyObject* self, PyObject* args) {
         return NULL;
     }
 
-    // Process the input string using the nussinov function
-    char* processed_str = nussinov(input_str);
+    int length = strlen(input_str);
+    char structure[length + 1];  // Allocate buffer for the structure array
 
-    // Check if processing failed
-    if (processed_str == NULL) {
-        return NULL;
-    }
+    // Process the input string using the nussinov function
+    nussinov(input_str, structure);
 
     // Convert the processed C string to a Python string
-    PyObject* result = PyUnicode_FromString(processed_str);
-
-    // Free dynamically allocated memory
-    free(processed_str);
-
-    return result;
+    return PyUnicode_FromString(structure);
 }
 
 
 static struct PyMethodDef methods[] = {
     {"hello_world", (PyCFunction)_hello_world, METH_NOARGS},
     {"version", (PyCFunction)version, METH_NOARGS},
-    {"process_string", process_string, METH_VARARGS, "Process a string"},
+    {"fold_rna", rna_fold, METH_VARARGS, "Returns secondary structure of a nucleotide sequence"},
     {NULL, NULL}
 };
 
@@ -117,13 +108,6 @@ static struct PyModuleDef module = {
 PyMODINIT_FUNC PyInit_rna_fold(void){
     return PyModule_Create(&module);
 }
-*/
-
-int main(void){
-    char rna[] = "AGACGACAAGGUUGAAUCGCACCCACAGUCUAUGAGUCGGUG";
-    nussinov(rna);
-}
-
 
 
 

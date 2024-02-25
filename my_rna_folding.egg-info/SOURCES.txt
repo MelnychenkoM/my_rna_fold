@@ -1,6 +1,0 @@
-_fold_rna.c
-setup.py
-my_rna_folding.egg-info/PKG-INFO
-my_rna_folding.egg-info/SOURCES.txt
-my_rna_folding.egg-info/dependency_links.txt
-my_rna_folding.egg-info/top_level.txt

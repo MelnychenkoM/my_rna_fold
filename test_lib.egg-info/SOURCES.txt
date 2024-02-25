@@ -1,6 +1,0 @@
-_hello.c
-setup.py
-test_lib.egg-info/PKG-INFO
-test_lib.egg-info/SOURCES.txt
-test_lib.egg-info/dependency_links.txt
-test_lib.egg-info/top_level.txt
