@@ -1,6 +1,6 @@
+#include "rna_fold.h"
 #include <string.h>
 #include <stdio.h>
-#include <Python.h>
 
 #define max(a,b) \
    ({ __typeof__ (a) _a = (a); \
@@ -63,51 +63,40 @@ void nussinov(const char rna[], char* structure) {
     // printf("Optimal secondary structure: %s\n", structure);
 }
 
-static PyObject* _hello_world(PyObject* self){
-    return PyUnicode_FromString("Hello World!");
-}
+double GC_content(const char* seq){
+    int length = strlen(seq);
 
-static PyObject* version(PyObject* self){
-    return PyUnicode_FromString("Test version (the algorithm is not verified)");
-}
+    int G_count = 0;
+    int C_count = 0;
+    int A_count = 0;
+    int U_count = 0;
+    int T_count = 0;
 
-static PyObject* fold(PyObject* self, PyObject* args) {
-    const char* input_str;
+    for (int i = 0; i < length; i++){
+        switch (seq[i]) {
+        case 'A':
+            A_count++;
+            break;
 
-    // Parse the input Python string into a C string
-    if (!PyArg_ParseTuple(args, "s", &input_str)) {
-        return NULL;
+        case 'C':
+            C_count++;
+            break;
+        
+        case 'U':
+            U_count++;
+            break;
+
+        case 'G':
+            G_count++;
+            break;
+
+        case 'T':
+            T_count++;
+            break;
+        }
     }
-
-    int length = strlen(input_str);
-    char structure[length + 1];  // Allocate buffer for the structure array
-
-    // Process the input string using the nussinov function
-    nussinov(input_str, structure);
-
-    // Convert the processed C string to a Python string
-    return PyUnicode_FromString(structure);
+    
+    int GC_count = G_count + C_count;
+    double percentage = (double)GC_count / (GC_count + A_count + U_count + T_count);
+    return percentage;
 }
-
-
-static struct PyMethodDef methods[] = {
-    {"hello_world", (PyCFunction)_hello_world, METH_NOARGS},
-    {"version", (PyCFunction)version, METH_NOARGS},
-    {"fold", (PyCFunction)fold, METH_VARARGS, "Returns secondary structure of a nucleotide sequence"},
-    {NULL, NULL}
-};
-
-static struct PyModuleDef module = {
-    PyModuleDef_HEAD_INIT,
-    "my-rna-folding",
-    NULL,
-    -1,
-    methods
-};
-
-PyMODINIT_FUNC PyInit_rna_fold(void){
-    return PyModule_Create(&module);
-}
-
-
-
