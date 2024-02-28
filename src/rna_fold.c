@@ -7,34 +7,30 @@
        __typeof__ (b) _b = (b); \
      _a > _b ? _a : _b; })
 
-// Nussinov algorithm for rna folding
-void nussinov(const char rna[], char* structure) {
-    int length = strlen(rna);
-
-    printf("Input sequence: %s\n", rna);
-    printf("The length of the rna sequence: %d\n", length);
-
-    int matrix[length][length];
-
+// Nussinov matrix
+void make_nussinov_matrix(const char rna[], int length, int matrix[length][length]) {
     for (int i = 0; i < length; i++) {
         for (int j = 0; j < length; j++) {
             matrix[i][j] = 0;
         }
     }
 
-    for (int j = 0; j < length; j++) {
-        for (int i = 0; i < j; i++) { 
-            matrix[i][j] = max(matrix[i][j], matrix[i+1][j]);
+    for (int j = 1; j < length; j++) {
+        for (int i = j - 1; i >= 0; i--) {
+            matrix[i][j] = matrix[i + 1][j];
             if ((rna[i] == 'A' && rna[j] == 'U') || (rna[i] == 'U' && rna[j] == 'A') ||
-                (rna[i] == 'C' && rna[j] == 'G') || (rna[i] == 'G' && rna[j] == 'C')) {
-                matrix[i][j] = max(matrix[i][j], matrix[i+1][j-1] + 1);
+                (rna[i] == 'C' && rna[j] == 'G') || (rna[i] == 'G' && rna[j] == 'C') ||
+                (rna[i] == 'G' && rna[j] == 'U') || (rna[i] == 'U' && rna[j] == 'G')) {
+                matrix[i][j] = matrix[i + 1][j - 1] + 1;
             }
-            for (int k = i+1; k < j-1; k++){
-                matrix[i][j] = max(matrix[i][j], matrix[i][k] + matrix[k+1][j]);
+            for (int k = i + 1; k < j; k++) {
+                matrix[i][j] = max(matrix[i][j], matrix[i][k] + matrix[k + 1][j]);
             }
         }
     }
+}
 
+void traceback_nussinov(const char rna[], int length, int matrix[length][length], char structure[]) {
     for (int i = 0; i < length; i++) {
         structure[i] = '.'; 
     }
@@ -59,29 +55,17 @@ void nussinov(const char rna[], char* structure) {
             j--;
         }
     }
-    // printf("Optimal secondary structure: %s\n", structure);
 }
 
-// Nussinov matrix
-void populate_matrix(const char rna[], int length, int matrix[length][length]) {
-    for (int i = 0; i < length; i++) {
-        for (int j = 0; j < length; j++) {
-            matrix[i][j] = 0;
-        }
-    }
+// Nussinov algorithm for rna folding
+void nussinov(const char rna[], char* structure) {
+    int length = strlen(rna);
 
-    for (int j = 0; j < length; j++) {
-        for (int i = 0; i < j; i++) {
-            matrix[i][j] = max(matrix[i][j], matrix[i + 1][j]);
-            if ((rna[i] == 'A' && rna[j] == 'U') || (rna[i] == 'U' && rna[j] == 'A') ||
-                (rna[i] == 'C' && rna[j] == 'G') || (rna[i] == 'G' && rna[j] == 'C')) {
-                matrix[i][j] = max(matrix[i][j], matrix[i + 1][j - 1] + 1);
-            }
-            for (int k = i + 1; k < j - 1; k++) {
-                matrix[i][j] = max(matrix[i][j], matrix[i][k] + matrix[k + 1][j]);
-            }
-        }
-    }
+    int matrix[length][length];
+
+    make_nussinov_matrix(rna, length, matrix);
+
+    traceback_nussinov(rna, length, matrix, structure);
 }
 
 double GC_content(const char* seq){
